@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Formik } from 'formik';
-import { Button, Form, Grid, Icon, Segment } from 'semantic-ui-react'
+import { Button, Form, Grid, Icon, Segment, Header } from 'semantic-ui-react'
 import * as Yup from "yup";
 import axios from 'axios'
 import { useLocalStorage } from '../hooks/useLocalStorage'
@@ -9,6 +9,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage'
 const Login = (props) => {
     console.log(props)
     const[token, SetToken] = useLocalStorage('token')
+    const[error, setError] = useState(false)
 
     return (
 
@@ -35,6 +36,7 @@ const Login = (props) => {
                     })
                     .catch(err => {
                         console.log(err.response)
+                        setError(true)
                         actions.setSubmitting(false)
                     })
             }}
@@ -85,6 +87,8 @@ const Login = (props) => {
                                     </Button.Content>                                
                                 </Button>
 
+                                {error && <Header color='red' size='small'>Error ... Sever Not Found!</Header>}
+
                             </Form>
 
                         </Segment>
@@ -99,6 +103,8 @@ const Login = (props) => {
 const UserSignUpSchema = Yup.object().shape({
 
     username: Yup.string()
+        .min(3, 'Not Long Enough')
+        .max(15, 'Slow Down Partner')
         .required('You must participate if you want the goods'),
     password: Yup.string()
         .min(3, 'Not Long Enough')
