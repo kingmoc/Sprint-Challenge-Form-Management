@@ -3,10 +3,12 @@ import { Formik } from 'formik';
 import { Button, Form, Grid, Icon, Segment } from 'semantic-ui-react'
 import * as Yup from "yup";
 import axios from 'axios'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 
 
 const Login = (props) => {
     console.log(props)
+    const[token, SetToken] = useLocalStorage('token')
 
     return (
 
@@ -25,9 +27,11 @@ const Login = (props) => {
                 axios.post(url, values)
                     .then(res => {
                         console.log(res.data.token)
-
-                        // localStorage.setItem('token', res.data.payload)
-                        // actions.setSubmitting(false)
+                        
+                        // localStorage.setItem('token', res.data.token)
+                        SetToken(res.data.token)
+                        actions.setSubmitting(false)
+                        props.history.push('/list')
                     })
                     .catch(err => {
                         console.log(err.response)
